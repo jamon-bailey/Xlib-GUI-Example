@@ -4,9 +4,9 @@
   "configurations": [
     {
       "type": "cppdbg",
-      "name": "Windows x64 MinGW (GDB) - Demo_Executable.exe",
-      "project": "install\\win32-x64-mingw-debug\\bin\\Demo_Executable.exe",
-      // TODO: Replace 'Demo_Executable.exe' above with your executable name
+      "name": "Windows x64 MinGW (GDB) - X11_App.exe",
+      "project": "install\\win32-x64-mingw-debug\\bin\\X11_App.exe",
+      // TODO: Replace 'X11_App.exe' above with your executable name
       "projectTarget": "",
       "cwd": "${workspaceRoot}",
       "program": "${debugInfo.target}",
@@ -16,9 +16,9 @@
     },
     {
       "type": "native",
-      "name": "Windows x64 MSVC (VSDBG) - Demo_Executable.exe",
-      "project": "install\\win32-x64-msvc-debug\\bin\\Demo_Executable.exe",
-      // TODO: Replace 'Demo_Executable.exe' above with your executable name
+      "name": "Windows x64 MSVC (VSDBG) - X11_App.exe",
+      "project": "install\\win32-x64-msvc-debug\\bin\\X11_App.exe",
+      // TODO: Replace 'X11_App.exe' above with your executable name
       "projectTarget": ""
     }
   ]

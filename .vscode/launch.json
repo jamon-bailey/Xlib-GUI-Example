@@ -9,8 +9,8 @@
             "name": "Windows x64 MSVC (vsdbg)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/install/win32-x64-msvc-debug/bin/Demo_Executable.exe",
-            // TODO: Replace 'Demo_Executable.exe' above with your executable name
+            "program": "${workspaceFolder}/install/win32-x64-msvc-debug/bin/X11_App.exe",
+            // TODO: Replace 'X11_App.exe' above with your executable name
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -21,8 +21,8 @@
             "name": "Windows x64 MinGW (gdb)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/install/win32-x64-mingw-debug/bin/Demo_Executable.exe",
-            // TODO: Replace 'Demo_Executable.exe' above with your executable name
+            "program": "${workspaceFolder}/install/win32-x64-mingw-debug/bin/X11_App.exe",
+            // TODO: Replace 'X11_App.exe' above with your executable name
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -47,8 +47,8 @@
             "name": "Linux x64 GCC (gdb)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/install/linux-x64-gcc-debug/bin/Demo_Executable",
-            // TODO: Replace 'Demo_Executable' above with your executable name
+            "program": "${workspaceFolder}/install/linux-x64-gcc-debug/bin/X11_App",
+            // TODO: Replace 'X11_App' above with your executable name
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -72,8 +72,8 @@
             "name": "Linux x64 Clang (lldb)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/install/linux-x64-clang-debug/bin/Demo_Executable",
-            // TODO: Replace 'Demo_Executable' above with your executable name
+            "program": "${workspaceFolder}/install/linux-x64-clang-debug/bin/X11_App",
+            // TODO: Replace 'X11_App' above with your executable name
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

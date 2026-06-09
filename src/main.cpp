@@ -1,11 +1,15 @@
 
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 // Xlib (X11) HTML Documentation:
 // https://xorg.freedesktop.org/archive/current/doc/libX11/libX11/libX11.html
 //
 // Xlib (X11) PDF Documentation:
 // https://xorg.freedesktop.org/archive/current/doc/libX11/libX11/libX11.pdf
+
+static constexpr const char* WINDOW_CLASS_NAME = "Xlib Demo";
+static constexpr const char* WINDOW_TITLE_TEXT = "Demo Xlib Application";
 
 int main(const int argc, const char* argv[])
 {
@@ -50,9 +54,18 @@ int main(const int argc, const char* argv[])
     );
     // ------------------------------------------------> Create Window On Display Server <---
 
+    // ---> Set Window Manager Properties <--------------------------------------------------
     // Set window titlebar text
-    XStoreName(displayServer, mainWindowId, "Demo Xlib Application");
+    XStoreName(displayServer, mainWindowId, WINDOW_TITLE_TEXT);
 
+    // Specify identify of window for window manager
+    XClassHint windowClassHint{};
+    windowClassHint.res_name = const_cast<char*>(WINDOW_TITLE_TEXT);  ///< Window instance name
+    windowClassHint.res_class = const_cast<char*>(WINDOW_CLASS_NAME); ///< Application family
+    XSetClassHint(displayServer, mainWindowId, &windowClassHint);
+    // --------------------------------------------------> Set Window Manager Properties <---
+
+    // Intercept WM_DELETE_WINDOW protocol in event loop for handling
     Atom wm_delete = XInternAtom(displayServer, "WM_DELETE_WINDOW", false);
     XSetWMProtocols(displayServer, mainWindowId, &wm_delete, 1);
 

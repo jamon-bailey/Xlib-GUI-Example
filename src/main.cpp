@@ -65,7 +65,7 @@ int main(const int argc, const char* argv[])
     XSetClassHint(displayServer, mainWindowId, &windowClassHint);
     // --------------------------------------------------> Set Window Manager Properties <---
 
-    // Intercept WM_DELETE_WINDOW protocol in event loop for handling
+    // Register WM_DELETE_WINDOW protocol so close requests arrive in event loop
     Atom wm_delete = XInternAtom(displayServer, "WM_DELETE_WINDOW", false);
     XSetWMProtocols(displayServer, mainWindowId, &wm_delete, 1);
 
@@ -76,8 +76,10 @@ int main(const int argc, const char* argv[])
     XEvent event;
 
     do {
+        // Block until next event is received from queue
         XNextEvent(displayServer, &event);
 
+        // Exit event loop on WM_DELETE_WINDOW event
         if (event.type == ClientMessage && (Atom)event.xclient.data.l[0] == wm_delete)
             break;
     } while (true);

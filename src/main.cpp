@@ -1,4 +1,5 @@
 
+#include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
@@ -8,7 +9,7 @@
 // Xlib (X11) PDF Documentation:
 // https://xorg.freedesktop.org/archive/current/doc/libX11/libX11/libX11.pdf
 
-static constexpr const char* WINDOW_CLASS_NAME = "Xlib Demo";
+static constexpr const char* APP_CLASS_NAME = "Xlib Demo";
 static constexpr const char* WINDOW_TITLE_TEXT = "Demo Xlib Application";
 
 int main(const int argc, const char* argv[])
@@ -24,19 +25,20 @@ int main(const int argc, const char* argv[])
     const int defaultScreen = XDefaultScreen(displayServer);
 
     // ---> Create Window On Display Server <------------------------------------------------
-    XSetWindowAttributes windowAttributes{};
+    XSetWindowAttributes windowAttributes{}; ///< Window attributes
 
+    // Delegate minimum window repaint to Xlib
     windowAttributes.background_pixel = WhitePixel(displayServer, defaultScreen);
     windowAttributes.border_pixel = BlackPixel(displayServer, defaultScreen);
 
     // Events this window will respond to
-    windowAttributes.event_mask = ExposureMask
-                                | StructureNotifyMask
-                                | KeyPressMask
-                                | KeyReleaseMask
-                                | ButtonPressMask
-                                | ButtonReleaseMask
-                                | PointerMotionMask;
+    windowAttributes.event_mask = ExposureMask        ///< Notify when window area needs repainting
+                                | StructureNotifyMask ///< Notify when window geometry/visibility changes
+                                | KeyPressMask        ///< Notify when a keyboard key is pressed
+                                | KeyReleaseMask      ///< Notify when a keyboard key is released
+                                | ButtonPressMask     ///< Notify when a mouse button is pressed
+                                | ButtonReleaseMask   ///< Notify when a mouse button is released
+                                | PointerMotionMask;  ///< Notify when the mouse pointer moves
 
     Window mainWindowId = XCreateWindow( ///< Identifier of main application window
         displayServer,                               ///< Display server
@@ -54,19 +56,26 @@ int main(const int argc, const char* argv[])
     );
     // ------------------------------------------------> Create Window On Display Server <---
 
-    // ---> Set Window Manager Properties <--------------------------------------------------
+    // Check that window creation did not fail
+    // Note: In production, use XSetErrorHandler construct with
+    //       XSync to really determine if this failed.
+    if (mainWindowId == None)
+        return 100;
+
     // Set window titlebar text
     XStoreName(displayServer, mainWindowId, WINDOW_TITLE_TEXT);
 
+    // ---> Set Window Manager Properties <--------------------------------------------------
     // Specify identify of window for window manager
-    XClassHint windowClassHint{};
-    windowClassHint.res_name = const_cast<char*>(WINDOW_TITLE_TEXT);  ///< Window instance name
-    windowClassHint.res_class = const_cast<char*>(WINDOW_CLASS_NAME); ///< Application family
-    XSetClassHint(displayServer, mainWindowId, &windowClassHint);
+    XClassHint windowHints{};
+    windowHints.res_name = const_cast<char*>(WINDOW_TITLE_TEXT); ///< Window instance name
+    windowHints.res_class = const_cast<char*>(APP_CLASS_NAME);   ///< Window family (class) name
+    XSetClassHint(displayServer, mainWindowId, &windowHints);
     // --------------------------------------------------> Set Window Manager Properties <---
 
     // Register WM_DELETE_WINDOW protocol so close requests arrive in event loop
     Atom wm_delete = XInternAtom(displayServer, "WM_DELETE_WINDOW", false);
+    Atom wm_protocols = XInternAtom(displayServer, "WM_PROTOCOLS", false);
     XSetWMProtocols(displayServer, mainWindowId, &wm_delete, 1);
 
     // Make newly created window visible on screen
@@ -80,8 +89,11 @@ int main(const int argc, const char* argv[])
         XNextEvent(displayServer, &event);
 
         // Exit event loop on WM_DELETE_WINDOW event
-        if (event.type == ClientMessage && (Atom)event.xclient.data.l[0] == wm_delete)
-            break;
+        if (event.type == ClientMessage &&                ///< Is this the WM protocols channel?
+            event.xclient.message_type == wm_protocols && ///< Is this a WM protocol message?
+            (Atom)event.xclient.data.l[0] == wm_delete) { ///< Is this a window close event?
+            break; // Terminate window event loop
+        }
     } while (true);
     // ----------------------------------------------------------> Run Window Event Loop <---
 
